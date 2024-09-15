@@ -104,10 +104,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Evento para mostrar/ocultar el formulario de agregar reparación
-    toggleRepairFormBtn.addEventListener("click", function () {
-        newRepairForm.style.display = newRepairForm.style.display === "none" ? "block" : "none";
-    });
+    // // Evento para mostrar/ocultar el formulario de agregar reparación
+    // toggleRepairFormBtn.addEventListener("click", function () {
+    //     newRepairForm.style.display = newRepairForm.style.display === "none" ? "block" : "none";
+    // });
 
     // Evento para borrar el resumen
     clearSummaryBtn.addEventListener("click", function () {

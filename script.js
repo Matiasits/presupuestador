@@ -6,7 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const addPartBtn = document.getElementById("addPartBtn");
     const toggleRepairFormBtn = document.getElementById("toggleRepairFormBtn");
     const newRepairForm = document.getElementById("newRepairForm");
-    const clearSummaryBtn = document.getElementById("clearSummaryBtn");
+    const clearSummaryBtn = document.getElementById("clearSummaryBtn");    
+    const exportPdfBtn = document.getElementById("exportPdfBtn");
     let totalPrice = 0;
 
     // Función para actualizar el resumen y el total
@@ -103,11 +104,34 @@ document.addEventListener("DOMContentLoaded", function () {
             updateSummary(partName, partPrice, true);
         }
     });
+    
+    // Evento para exportar a PDF
+    if (exportPdfBtn) {
+        exportPdfBtn.addEventListener("click", function () {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
 
-    // // Evento para mostrar/ocultar el formulario de agregar reparación
-    // toggleRepairFormBtn.addEventListener("click", function () {
-    //     newRepairForm.style.display = newRepairForm.style.display === "none" ? "block" : "none";
-    // });
+            // Agrega el título del PDF
+            doc.setFontSize(18);
+            doc.text("Resumen de Reparaciones", 10, 10);
+
+            // Agrega los elementos seleccionados al PDF
+            const items = selectedRepairs.querySelectorAll("li");
+            let yOffset = 20; // Margen superior para los elementos
+            items.forEach(item => {
+                doc.setFontSize(12);
+                doc.text(item.textContent, 10, yOffset);
+                yOffset += 10; // Aumenta el margen para cada ítem
+            });
+
+            // Agrega el precio total al PDF
+            doc.setFontSize(14);
+            doc.text(`Total: $${totalPriceElement.textContent}`, 10, yOffset + 10);
+
+            // Genera y descarga el PDF
+            doc.save("resumen-reparaciones.pdf");
+        });
+    }
 
     // Evento para borrar el resumen
     clearSummaryBtn.addEventListener("click", function () {

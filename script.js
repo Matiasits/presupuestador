@@ -105,11 +105,67 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
     
+<<<<<<< HEAD
     // Evento para exportar a PDF
     if (exportPdfBtn) {
         exportPdfBtn.addEventListener("click", function () {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
+=======
+    // Evento para exportar a PDF basado en el template HTML
+    exportPdfBtn.addEventListener("click", function () {
+        // Paso 1: Cargar el archivo HTML externo con fetch()
+        fetch('./templateODT.html')
+            .then(response => response.text())
+            .then(htmlContent => {
+                // Crear un elemento temporal para insertar el contenido del archivo HTML
+                const tempElement = document.createElement('div');
+                tempElement.innerHTML = htmlContent;
+    
+                // Paso 2: Insertar los datos dinámicos en el contenido HTML
+                const selectedRepairs = document.querySelectorAll("#selectedRepairs li");  // Resumen actual
+                const totalPrice = document.getElementById("totalPrice").textContent;     // Precio total
+    
+                // Insertar los ítems de reparaciones seleccionadas
+                const tbodyElement = tempElement.querySelector('#selectedRepairs');
+                selectedRepairs.forEach(item => {
+                    const repairRow = document.createElement('tr');
+                    
+                    // Acceder al contenido de `li`
+                    const textContent = item.textContent;
+                    const [repairName, repairPrice] = textContent.split(" - $");
+    
+                    // Generar la fila de la tabla
+                    repairRow.innerHTML = `<td>${repairName}</td><td>$${repairPrice}</td>`;
+                    tbodyElement.appendChild(repairRow);
+                });
+     
+     
+                // Actualizar el total en el HTML
+                tempElement.querySelector('h2').textContent = `Total: $${totalPrice}`;
+    
+                // Paso 3: Generar el PDF desde el contenido HTML
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                    
+                // Generar el PDF
+                doc.html(tempElement, {
+                    callback: function (doc) {
+                        doc.save("resumen-reparaciones.pdf");
+                    },
+                    x: 0,
+                    y: 0,
+                    html2canvas: { scale: 0.25 },
+                    width: 190,
+                    windowWidth: 650
+                });
+                
+            })
+            .catch(error => console.error('Error al cargar el archivo HTML:', error));
+    });
+    
+    
+>>>>>>> 16eb78f ( a)
 
             // Agrega el título del PDF
             doc.setFontSize(18);

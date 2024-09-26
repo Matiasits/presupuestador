@@ -127,13 +127,36 @@
                     <input type="number" class="form-control" id="newPartPrice" placeholder="Precio en $">
                 </div>
                 <button type="button" id="addPartBtn" class="btn btn-secondary">Agregar Repuesto</button>
+                
+                <h3 class="mt-4 efecto-3d">Datos del cliente</h3>
+
+                <div class="mb-3">
+                    <label for="clientName" class="form-label archivo-black-regular">Nombre del Cliente</label>
+                    <input type="text" class="form-control" id="clientNameInput" placeholder="Ingresa el nombre del cliente">
+                </div>
+                <div class="mb-3">
+                    <label for="clientDNI" class="form-label archivo-black-regular">Número de DNI</label>
+                    <input type="text" class="form-control" id="clientDNIInput" placeholder="Ingresa el número de DNI">
+                </div>
+                <div class="mb-3">
+                    <label for="clientPhone" class="form-label archivo-black-regular">Número de Teléfono</label>
+                    <input type="text" class="form-control" id="clientPhoneInput" placeholder="Ingresa el número de teléfono">
+                </div>
+                <div class="mb-3">
+                    <label for="clientAuth" class="form-label archivo-black-regular">¿Quién retira?</label>
+                    <input type="text" class="form-control" id="clientAuthInput" placeholder="Ingresa el nombre del autorizado">
+                </div>
 
                 <!-- Resumen de selecciones -->
                 <h2 class="mt-5 efecto-3d">Resumen de Selección</h2>
                 <ul id="selectedRepairs" class="list-group">
                     <!-- Reparaciones seleccionadas aparecerán aquí -->
                 </ul>
-                <h3 class="mt-3  efecto-3d">Total: $<span id="totalPrice">0</span></h3>
+                
+                <h3 class="mt-3 efecto-3d">Total: $<span id="totalPrice">0</span></h3>
+                <h3 class="mt-3 efecto-3d">Seña: $<input type="number" id="señaPrice" value="0"></h3>
+                <h3 class="mt-3 efecto-3d">Saldo: $<span id="saldoPrice">0</span></h3>
+                
                 <button type="button" id="clearSummaryBtn" class="btn btn-danger mt-3">Borrar Resumen</button>
                 
                 <button type="button" id="exportPdfBtn" class="btn btn-primary mt-3">Exportar Resumen a PDF</button>

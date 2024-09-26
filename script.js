@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let totalPrice = 0;
 
     // Función para actualizar el resumen y el total
-   // Función para actualizar el resumen y el total
     function updateSummary(name, price, isAdding) {
         if (isAdding) {
             // Agregar al resumen
@@ -56,7 +55,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     });
-
 
     // Evento para los checkboxes de reparaciones predefinidas
     checkboxes.forEach(checkbox => {
@@ -105,14 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
     
-<<<<<<< HEAD
-    // Evento para exportar a PDF
-    if (exportPdfBtn) {
-        exportPdfBtn.addEventListener("click", function () {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-=======
-    // Evento para exportar a PDF basado en el template HTML
     exportPdfBtn.addEventListener("click", function () {
         // Paso 1: Cargar el archivo HTML externo con fetch()
         fetch('./templateODT.html')
@@ -123,77 +113,51 @@ document.addEventListener("DOMContentLoaded", function () {
                 tempElement.innerHTML = htmlContent;
     
                 // Paso 2: Insertar los datos dinámicos en el contenido HTML
-                const selectedRepairs = document.querySelectorAll("#selectedRepairs li");  // Resumen actual
-                const totalPrice = document.getElementById("totalPrice").textContent;     // Precio total
+                const selectedItems = document.querySelectorAll("#selectedRepairs li"); // Resumen actual
+                const totalPrice = document.getElementById("totalPrice").textContent;   // Precio total
     
-                // Insertar los ítems de reparaciones seleccionadas
-                const tbodyElement = tempElement.querySelector('#selectedRepairs');
-                selectedRepairs.forEach(item => {
+                // Insertar los ítems de reparaciones seleccionadas en la tabla
+                const tbodyElement = tempElement.querySelector('#selectedRepairs'); // Asegúrate de que el ID exista en tu template
+                selectedItems.forEach(item => {
                     const repairRow = document.createElement('tr');
                     
                     // Acceder al contenido de `li`
-                    const textContent = item.textContent;
+                    const textContent = item.textContent.trim();
                     const [repairName, repairPrice] = textContent.split(" - $");
     
                     // Generar la fila de la tabla
                     repairRow.innerHTML = `<td>${repairName}</td><td>$${repairPrice}</td>`;
                     tbodyElement.appendChild(repairRow);
                 });
-     
-     
+    
                 // Actualizar el total en el HTML
                 tempElement.querySelector('h2').textContent = `Total: $${totalPrice}`;
     
                 // Paso 3: Generar el PDF desde el contenido HTML
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
-                    
-                // Generar el PDF
-                doc.html(tempElement, {
-                    callback: function (doc) {
-                        doc.save("resumen-reparaciones.pdf");
-                    },
-                    x: 0,
-                    y: 0,
-                    html2canvas: { scale: 0.25 },
-                    width: 190,
-                    windowWidth: 650
-                });
-                
+    
+                // Esperar un momento para que se renderice todo el contenido
+                setTimeout(() => {
+                    doc.html(tempElement, {
+                        callback: function (doc) {
+                            doc.save("resumen-reparaciones.pdf");
+                        },
+                        x: 5, // Ajustar posición X
+                        y: 5, // Ajustar posición Y
+                        html2canvas: { scale: 0.1 }, // Ajustar el escalado de la imagen si es necesario
+                        width: 100, // Ancho del documento
+                        windowWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) // Ajuste de tamaño de ventana
+                    });
+                }, 1000); // Retraso de 1 segundo para asegurar que el contenido se renderice completamente
             })
             .catch(error => console.error('Error al cargar el archivo HTML:', error));
     });
-    
-    
->>>>>>> 16eb78f ( a)
-
-            // Agrega el título del PDF
-            doc.setFontSize(18);
-            doc.text("Resumen de Reparaciones", 10, 10);
-
-            // Agrega los elementos seleccionados al PDF
-            const items = selectedRepairs.querySelectorAll("li");
-            let yOffset = 20; // Margen superior para los elementos
-            items.forEach(item => {
-                doc.setFontSize(12);
-                doc.text(item.textContent, 10, yOffset);
-                yOffset += 10; // Aumenta el margen para cada ítem
-            });
-
-            // Agrega el precio total al PDF
-            doc.setFontSize(14);
-            doc.text(`Total: $${totalPriceElement.textContent}`, 10, yOffset + 10);
-
-            // Genera y descarga el PDF
-            doc.save("resumen-reparaciones.pdf");
-        });
-    }
-
+        
     // Evento para borrar el resumen
     clearSummaryBtn.addEventListener("click", function () {
         selectedRepairs.innerHTML = ''; // Eliminar todos los ítems del resumen
         totalPrice = 0; // Reiniciar el total
         totalPriceElement.textContent = totalPrice.toFixed(2); // Actualizar el total mostrado
     });
-
 });

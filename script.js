@@ -140,7 +140,6 @@ document.addEventListener("DOMContentLoaded", function () {
             // Limpiar los campos de entrada para el próximo repuesto
             document.getElementById("newPartName").value = '';
             document.getElementById("newPartPrice").value = '';
-
         }
     });
     exportPdfBtn.addEventListener("click", function () {
@@ -239,7 +238,7 @@ document.addEventListener("DOMContentLoaded", function () {
             item.appendChild(removeButton);
         });
     }
-
+  
     clearSummaryBtn.addEventListener("click", function () {
         selectedRepairs.innerHTML = '';
         totalPrice = 0;

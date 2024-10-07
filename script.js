@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let totalPrice = 0;
 
+    console.log(document.getElementById(selectedRepairs));
      // Función para actualizar el saldo
      function updateSaldo() {
         const señaPrice = parseFloat(señaPriceInput.value) || 0; // Obtener la seña o 0 si es inválido
@@ -61,12 +62,39 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     checkboxes.forEach(checkbox => {
-        checkbox.addEventListener("change", function () {
+        checkbox.addEventListener('change', function () {
             const repairName = this.value;
-            const repairPrice = parseFloat(this.getAttribute("data-precio"));
-            updateSummary(repairName, repairPrice, this.checked);
+            const repairPrice = parseFloat(this.getAttribute('data-precio'));
+            
+            if (isNaN(repairPrice)) {
+                console.error(`Precio no válido para ${repairName}`);
+                return;
+            }
+    
+            if (this.checked) {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${repairName} - $${repairPrice.toFixed(2)}`;
+                listItem.classList.add('list-group-item');
+                listItem.setAttribute('data-precio', repairPrice); // Agregar el precio al atributo del elemento
+                selectedRepairs.appendChild(listItem);
+    
+                totalPrice += repairPrice;
+            } else {
+                const items = Array.from(selectedRepairs.children);
+                const itemToRemove = items.find(item => item.textContent.includes(repairName));
+                if (itemToRemove) {
+                    const priceToRemove = parseFloat(itemToRemove.getAttribute('data-precio'));
+                    selectedRepairs.removeChild(itemToRemove);
+                    totalPrice -= priceToRemove;
+                }
+            }
+    
+            totalPriceElement.textContent = totalPrice.toFixed(2); // Asegura que el valor sea un número formateado
+            updateSaldo();
         });
     });
+    
+    
 
     addRepairBtn.addEventListener("click", function () {
         const repairName = document.getElementById("newRepairName").value;
@@ -132,7 +160,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
     
                 // Paso 3: Insertar las reparaciones seleccionadas
-                const selectedItems = document.querySelectorAll("#selectedRepairs li");
+                const selectedItems = Array.from(selectedRepairs.children); // Obtener los elementos seleccionados
                 let totalSum = 0;
                 const tbodyElement = tempElement.querySelector('#selectedRepairs');
     
@@ -148,20 +176,15 @@ document.addEventListener("DOMContentLoaded", function () {
                         repairRow.innerHTML = `<td>${repairName}</td><td>$${repairPrice}</td>`;
                         tbodyElement.appendChild(repairRow);
                     });
-    
-                    const totalElement = tempElement.querySelector('#totalAmount');
-                    
-                    if (totalElement) {
-                        totalElement.textContent = totalSum.toFixed(2);
-                    } else {
-                        console.error("El campo para mostrar el total no fue encontrado.");
-                    }
+
     
                     // Paso 4: Capturar y exportar Seña y Saldo
                     const totalSeñaElement = tempElement.querySelector('#totalSeña');
                     const totalSaldoElement = tempElement.querySelector('#totalSaldo');
-    
-                    if (totalSeñaElement && totalSaldoElement) {
+                    const totalElement = tempElement.querySelector('#totalPrice');
+                    
+                    if (totalSeñaElement && totalElement && totalSaldoElement) {
+                        totalElement.textContent = totalSum.toFixed(2);
                         totalSeñaElement.textContent = señaPriceInput.value;
                         totalSaldoElement.textContent = saldoPriceElement.textContent;
                     } else {

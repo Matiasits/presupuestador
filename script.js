@@ -92,9 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
             updateSaldo();
         });
     });
-    
-    
-
+  
     addRepairBtn.addEventListener("click", function () {
         const repairName = document.getElementById("newRepairName").value;
         const repairPrice = parseFloat(document.getElementById("newRepairPrice").value);
@@ -167,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const clientDNIElement = tempElement.querySelector("#clientDNI");
                 const clientPhoneElement = tempElement.querySelector("#clientPhone");
                 const clientAuthElement = tempElement.querySelector("#clientAuth");
-    
+
                 if (clientNameElement && clientDNIElement && clientPhoneElement && clientAuthElement) {
                     clientNameElement.textContent = clientName;
                     clientDNIElement.textContent = clientDNI;
@@ -195,7 +193,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         tbodyElement.appendChild(repairRow);
                     });
 
-    
                     // Paso 4: Capturar y exportar Seña y Saldo
                     const totalSeñaElement = tempElement.querySelector('#totalSeña');
                     const totalSaldoElement = tempElement.querySelector('#totalSaldo');

@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
         saldoPriceElement.textContent = saldo.toFixed(2); // Actualizar el saldo en el HTML
     }
 
-    // Actualizar el resumen y el total
     function updateSummary(name, price, isAdding) {
         if (isAdding) {
             // Actualizar el total sumando el precio
@@ -141,9 +140,9 @@ document.addEventListener("DOMContentLoaded", function () {
             // Limpiar los campos de entrada para el próximo repuesto
             document.getElementById("newPartName").value = '';
             document.getElementById("newPartPrice").value = '';
+
         }
     });
-    
     exportPdfBtn.addEventListener("click", function () {
         fetch('./templateODT.html')
             .then(response => response.text())
@@ -240,7 +239,7 @@ document.addEventListener("DOMContentLoaded", function () {
             item.appendChild(removeButton);
         });
     }
-    
+
     clearSummaryBtn.addEventListener("click", function () {
         selectedRepairs.innerHTML = '';
         totalPrice = 0;

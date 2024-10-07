@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let totalPrice = 0;
 
-    console.log(document.getElementById(selectedRepairs));
      // Función para actualizar el saldo
      function updateSaldo() {
         const señaPrice = parseFloat(señaPriceInput.value) || 0; // Obtener la seña o 0 si es inválido
@@ -122,12 +121,31 @@ document.addEventListener("DOMContentLoaded", function () {
     addPartBtn.addEventListener("click", function () {
         const partName = document.getElementById("newPartName").value;
         const partPrice = parseFloat(document.getElementById("newPartPrice").value);
-
+    
         if (partName && partPrice) {
-            updateSummary(partName, partPrice, true);
+            // Crear un nuevo elemento de lista para el repuesto
+            const listItem = document.createElement('li');
+            listItem.textContent = `${partName} - $${partPrice.toFixed(2)}`;
+            listItem.classList.add('list-group-item');
+            listItem.setAttribute('data-precio', partPrice); // Agregar el precio al atributo del elemento
+    
+            // Añadir un botón para eliminar el repuesto
+            const removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.classList.add("btn", "btn-danger", "btn-sm", "float-end", "remove-btn");
+            removeButton.textContent = "Eliminar";
+            listItem.appendChild(removeButton);
+    
+            selectedRepairs.appendChild(listItem); // Agregar el repuesto a la lista de repuestos seleccionados
+    
+            updateSummary(partName, partPrice, true); // Actualizar el resumen y el total
+    
+            // Limpiar los campos de entrada para el próximo repuesto
+            document.getElementById("newPartName").value = '';
+            document.getElementById("newPartPrice").value = '';
         }
     });
-
+    
     exportPdfBtn.addEventListener("click", function () {
         fetch('./templateODT.html')
             .then(response => response.text())
@@ -225,7 +243,7 @@ document.addEventListener("DOMContentLoaded", function () {
             item.appendChild(removeButton);
         });
     }
-
+    
     clearSummaryBtn.addEventListener("click", function () {
         selectedRepairs.innerHTML = '';
         totalPrice = 0;

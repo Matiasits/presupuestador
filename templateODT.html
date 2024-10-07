@@ -7,23 +7,28 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
             background-color: #f7f7f7;
+            width: 100%;
+
         }
         h1 {
             text-align: center;
             color: #333;
+            font-size: 60px;
         }
         .client-info, .summary {
             margin-bottom: 20px;
         }
         .client-info h2, .summary h2 {
+            font-size: 35px;
             background-color: #007BFF;
             color: white;
             padding: 10px;
             margin: 0;
             border-radius: 4px;
+            text-align: center;
         }
         .client-info p, .summary p {
             margin: 5px 0;
@@ -45,8 +50,12 @@
             text-align: left;
         }
         th {
+            font-size: 25px;
             background-color: #007BFF;
             color: white;
+        }
+        td {
+            font-size: 35px;
         }
         tr:nth-child(even) {
             background-color: #f2f2f2;
@@ -55,40 +64,77 @@
             text-align: right;
             font-weight: bold;
         }
+        .datos-cliente {
+            font-size: 25px;
+        }
+        
+        .titulo-advertencia {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: solid rgb(104, 103, 103) 5px;
+        border-radius: 50px;
+        padding: 10px 55px;
+        color: #f81818;
+        width: 80%;
+        height: 120px;
+        font-size: 40px;
+        }
+        
+        .titulo-container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
 
     <h1>Orden de Trabajo</h1>
-
-    <!-- Información del Cliente -->
-    <div class="client-info">
-        <h2>Información del Cliente</h2>
-        <p><strong>Nombre del Cliente:</strong> <span id="clientName">[Nombre]</span></p>
-        <p><strong>Número de Teléfono:</strong> <span id="clientPhone">[Teléfono]</span></p>
-        <p><strong>Número de Documento:</strong> <span id="clientDocument">[Documento]</span></p>
+    <div class="titulo-container">
+        <h2 class="titulo-advertencia">ESTE DOCUMENTO NO ES VALIDO COMO FACTURA</h2>
     </div>
-
-    <!-- Lista de Reparaciones -->
-    <div class="summary">
-        <h2>Lista de Reparaciones</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Reparación</th>
-                    <th>Precio</th>
-                </tr>
-            </thead>
-            <tbody id="selectedRepairs">
-                <!-- Las reparaciones se agregarán dinámicamente aquí -->
-            </tbody>
-        </table>
+    <div class="container">
+        <!-- Información del Cliente -->
+        <div class="client-info">
+            <h2>Información del Cliente</h2>
+            <p class="datos-cliente"><strong>Nombre del Cliente:</strong> <span id="clientName">[Nombre]</span></p>
+            <p class="datos-cliente"><strong>Número de Teléfono:</strong> <span id="clientPhone">[Teléfono]</span></p>
+            <p class="datos-cliente"><strong>Número de Documento:</strong> <span id="clientDNI">[Documento]</span></p>
+            <p class="datos-cliente"><strong>Número de Documento:</strong> <span id="clientAuth">[Autorizado]</span></p>
+        </div>
+    
+        <!-- Lista de Reparaciones -->
+        <div class="summary">
+            <h2>Lista de Reparaciones</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Reparación</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody id="selectedRepairs">
+                    <!-- Las reparaciones se agregarán dinámicamente aquí -->
+                </tbody>
+            </table>
+        </div>
+    
+        <!-- Total de Reparaciones -->
+        <div class="total">
+            <h2>Total: $<span id="totalPrice">0.00</span></h2>
+        </div>
+        <!-- Total de Reparaciones -->
+        <div class="sena">
+            <h2>Seña: $<span id="totalSeña">0.00</span></h2>
+        </div>
+        <!-- Total de Reparaciones -->
+        <div class="saldo">
+            <h2>Saldo: $<span id="totalSaldo">0.00</span></h2>
+        </div>
     </div>
-
-    <!-- Total de Reparaciones -->
-    <div class="total">
-        <h2>Total: $<span id="totalAmount">0.00</span></h2>
+    <div class="titulo-container">
+        <h2 class="titulo-advertencia">PARA RETIRAR, LA PERSONA AUTORIZADA DEBERA VALIDAR SU IDENTIDAD CON SU DOCUMENTO</h2>
     </div>
-
 </body>
 </html>

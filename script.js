@@ -8,47 +8,51 @@ document.addEventListener("DOMContentLoaded", function () {
     const newRepairForm = document.getElementById("newRepairForm");
     const clearSummaryBtn = document.getElementById("clearSummaryBtn");    
     const exportPdfBtn = document.getElementById("exportPdfBtn");
+    const señaPriceInput = document.getElementById("señaPrice");
+    const saldoPriceElement = document.getElementById("saldoPrice");
+    const repairDateInput = document.getElementById('repairDate');
+
+    
+    // Variables de cliente
+    const clientNameInput = document.getElementById('clientNameInput');
+    const clientDNIInput = document.getElementById('clientDNIInput');
+    const clientPhoneInput = document.getElementById('clientPhoneInput');
+    const clientAuthInput = document.getElementById('clientAuthInput');
+
     let totalPrice = 0;
 
-    // Función para actualizar el resumen y el total
-   // Función para actualizar el resumen y el total
+     // Función para actualizar el saldo
+     function updateSaldo() {
+        const señaPrice = parseFloat(señaPriceInput.value) || 0; // Obtener la seña o 0 si es inválido
+        const saldo = totalPrice - señaPrice; // Calcular el saldo
+        saldoPriceElement.textContent = saldo.toFixed(2); // Actualizar el saldo en el HTML
+    }
+
     function updateSummary(name, price, isAdding) {
         if (isAdding) {
-            // Agregar al resumen
-            const listItem = document.createElement("li");
-            listItem.classList.add("list-group-item");
-            listItem.setAttribute("data-precio", price);
-            listItem.innerHTML = `
-                ${name} - $${price} 
-                <button type="button" class="btn btn-danger btn-sm float-end remove-btn">Eliminar</button>
-            `;
-            selectedRepairs.appendChild(listItem);
+            // Actualizar el total sumando el precio
             totalPrice += price;
         } else {
-            // Quitar del resumen
-            const items = selectedRepairs.querySelectorAll("li");
-            items.forEach(item => {
-                if (item.textContent.includes(name)) {
-                    selectedRepairs.removeChild(item);
-                    totalPrice -= price;
-                }
-            });
+            // Actualizar el total restando el precio
+            totalPrice -= price;
         }
-        // Actualizar el precio total
-        totalPriceElement.textContent = totalPrice.toFixed(2);
+        totalPriceElement.textContent = totalPrice.toFixed(2); // Mostrar el total
+        updateSaldo(); // Actualizar el saldo
     }
-    
-    // Evento para eliminar ítems individuales
+
+    // Escuchar cambios en el input de seña para actualizar el saldo dinámicamente
+    señaPriceInput.addEventListener("input", function () {
+        updateSaldo();
+    });
+
     selectedRepairs.addEventListener("click", function(event) {
         if (event.target.classList.contains("remove-btn")) {
             const listItem = event.target.closest("li");
             const price = parseFloat(listItem.getAttribute("data-precio"));
-            const name = listItem.textContent.split(" - $")[0]; // Obtener el nombre de la reparación
+            const name = listItem.textContent.split(" - $")[0];
             selectedRepairs.removeChild(listItem);
             totalPrice -= price;
             totalPriceElement.textContent = totalPrice.toFixed(2);
-    
-            // Asegúrate de desmarcar el checkbox correspondiente
             checkboxes.forEach(checkbox => {
                 if (checkbox.value === name) {
                     checkbox.checked = false;
@@ -57,143 +61,248 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-
-    // Evento para los checkboxes de reparaciones predefinidas
     checkboxes.forEach(checkbox => {
-        checkbox.addEventListener("change", function () {
+        checkbox.addEventListener('change', function () {
             const repairName = this.value;
-            const repairPrice = parseFloat(this.getAttribute("data-precio"));
-            updateSummary(repairName, repairPrice, this.checked);
+            const repairPrice = parseFloat(this.getAttribute('data-precio'));
+            
+            if (isNaN(repairPrice)) {
+                console.error(`Precio no válido para ${repairName}`);
+                return;
+            }
+    
+            if (this.checked) {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${repairName} - $${repairPrice.toFixed(2)}`;
+                listItem.classList.add('list-group-item');
+                listItem.setAttribute('data-precio', repairPrice); // Agregar el precio al atributo del elemento
+                selectedRepairs.appendChild(listItem);
+    
+                totalPrice += repairPrice;
+            } else {
+                const items = Array.from(selectedRepairs.children);
+                const itemToRemove = items.find(item => item.textContent.includes(repairName));
+                if (itemToRemove) {
+                    const priceToRemove = parseFloat(itemToRemove.getAttribute('data-precio'));
+                    selectedRepairs.removeChild(itemToRemove);
+                    totalPrice -= priceToRemove;
+                }
+            }
+    
+            totalPriceElement.textContent = totalPrice.toFixed(2); // Asegura que el valor sea un número formateado
+            updateSaldo();
         });
     });
-    
-    // Evento para agregar una nueva reparación
+  
     addRepairBtn.addEventListener("click", function () {
         const repairName = document.getElementById("newRepairName").value;
         const repairPrice = parseFloat(document.getElementById("newRepairPrice").value);
         
         if (repairName && repairPrice) {
-            // Crear un checkbox para la nueva reparación
             const newRepairCheckbox = document.createElement("div");
             newRepairCheckbox.classList.add("form-check");
             newRepairCheckbox.innerHTML = `
                 <input class="form-check-input repair-checkbox" type="checkbox" value="${repairName}" data-precio="${repairPrice}">
                 <label class="form-check-label">${repairName} - $${repairPrice}</label>
             `;
-            document.getElementById("repairForm").appendChild(newRepairCheckbox); // Corrección aquí
-    
-            // Agregar evento al nuevo checkbox
+            document.getElementById("repairForm").appendChild(newRepairCheckbox);
+
             const checkboxInput = newRepairCheckbox.querySelector("input");
             checkboxInput.addEventListener("change", function () {
                 updateSummary(repairName, repairPrice, this.checked);
             });
-    
-            // Limpiar los campos de texto
+
             document.getElementById("newRepairName").value = '';
             document.getElementById("newRepairPrice").value = '';
         }
     });
-    
-    // Evento para agregar un repuesto adicional
+
     addPartBtn.addEventListener("click", function () {
         const partName = document.getElementById("newPartName").value;
         const partPrice = parseFloat(document.getElementById("newPartPrice").value);
-
+    
         if (partName && partPrice) {
-            // Agregar el repuesto al resumen como un ítem independiente
-            updateSummary(partName, partPrice, true);
+            // Crear un nuevo elemento de lista para el repuesto
+            const listItem = document.createElement('li');
+            listItem.textContent = `${partName} - $${partPrice.toFixed(2)}`;
+            listItem.classList.add('list-group-item');
+            listItem.setAttribute('data-precio', partPrice); // Agregar el precio al atributo del elemento
+    
+            // Añadir un botón para eliminar el repuesto
+            const removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.classList.add("btn", "btn-danger", "btn-sm", "float-end", "remove-btn");
+            removeButton.textContent = "Eliminar";
+            listItem.appendChild(removeButton);
+    
+            selectedRepairs.appendChild(listItem); // Agregar el repuesto a la lista de repuestos seleccionados
+    
+            updateSummary(partName, partPrice, true); // Actualizar el resumen y el total
+    
+            // Limpiar los campos de entrada para el próximo repuesto
+            document.getElementById("newPartName").value = '';
+            document.getElementById("newPartPrice").value = '';
+
         }
     });
-    
-<<<<<<< HEAD
-    // Evento para exportar a PDF
-    if (exportPdfBtn) {
-        exportPdfBtn.addEventListener("click", function () {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-=======
-    // Evento para exportar a PDF basado en el template HTML
     exportPdfBtn.addEventListener("click", function () {
-        // Paso 1: Cargar el archivo HTML externo con fetch()
         fetch('./templateODT.html')
             .then(response => response.text())
             .then(htmlContent => {
-                // Crear un elemento temporal para insertar el contenido del archivo HTML
                 const tempElement = document.createElement('div');
                 tempElement.innerHTML = htmlContent;
     
-                // Paso 2: Insertar los datos dinámicos en el contenido HTML
-                const selectedRepairs = document.querySelectorAll("#selectedRepairs li");  // Resumen actual
-                const totalPrice = document.getElementById("totalPrice").textContent;     // Precio total
+                // Crear una instancia del objeto Date para obtener la fecha actual
+                var fechaActual = new Date();
+                var dia = fechaActual.getDate(); // Día del mes (1-31)
+                var mes = fechaActual.getMonth() + 1; // Mes (0-11, por eso sumamos 1)
+                var año = fechaActual.getFullYear(); // Año completo (e.g., 2024)
     
-                // Insertar los ítems de reparaciones seleccionadas
-                const tbodyElement = tempElement.querySelector('#selectedRepairs');
-                selectedRepairs.forEach(item => {
-                    const repairRow = document.createElement('tr');
-                    
-                    // Acceder al contenido de `li`
-                    const textContent = item.textContent;
-                    const [repairName, repairPrice] = textContent.split(" - $");
-    
-                    // Generar la fila de la tabla
-                    repairRow.innerHTML = `<td>${repairName}</td><td>$${repairPrice}</td>`;
-                    tbodyElement.appendChild(repairRow);
-                });
-     
-     
-                // Actualizar el total en el HTML
-                tempElement.querySelector('h2').textContent = `Total: $${totalPrice}`;
-    
-                // Paso 3: Generar el PDF desde el contenido HTML
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                    
-                // Generar el PDF
-                doc.html(tempElement, {
-                    callback: function (doc) {
-                        doc.save("resumen-reparaciones.pdf");
-                    },
-                    x: 0,
-                    y: 0,
-                    html2canvas: { scale: 0.25 },
-                    width: 190,
-                    windowWidth: 650
-                });
+                // Asegúrate de que los elementos existen antes de asignar
+                const diaElement = tempElement.querySelector('#dia-actual');
+                const mesElement = tempElement.querySelector('#mes-actual');
+                const añoElement = tempElement.querySelector('#año-actual');
+                const diaIngresoElement = tempElement.querySelector('#dia-ingreso');
+                const mesIngresoElement = tempElement.querySelector('#mes-ingreso');
+                const añoIngresoElement = tempElement.querySelector('#año-ingreso');
                 
+                if (diaElement && mesElement && añoElement) {
+                    diaElement.innerText = dia;
+                    mesElement.innerText = mes;
+                    añoElement.innerText = año;
+                    diaIngresoElement.innerText = dia;
+                    mesIngresoElement.innerText = mes;
+                    añoIngresoElement.innerText = año;
+                } else {
+                    console.error("Uno o más elementos de fecha no fueron encontrados en el template.");
+                    return; // Salir de la función si no se encuentran los elementos
+                }
+                
+                 // Captura la fecha seleccionada
+                const selectedDate = new Date(repairDateInput.value);
+                const diaRetiro = selectedDate.getDate(); // Día del mes (1-31)
+                const mesRetiro = selectedDate.getMonth() + 1; // Mes (0-11, por eso sumamos 1)
+                const añoRetiro = selectedDate.getFullYear(); // Año completo (e.g., 2024)
+    
+                // Asegúrate de que los elementos existen antes de asignar
+                const diaRetiroElement = tempElement.querySelector('#dia-retiro');
+                const mesRetiroElement = tempElement.querySelector('#mes-retiro');
+                const añoRetiroElement = tempElement.querySelector('#año-retiro');
+    
+                if (diaRetiroElement && mesRetiroElement && añoRetiroElement) {
+                    diaRetiroElement.innerText = diaRetiro;
+                    mesRetiroElement.innerText = mesRetiro;
+                    añoRetiroElement.innerText = añoRetiro;
+                } else {
+                    console.error("Uno o más elementos de fecha no fueron encontrados en el template.");
+                    return; // Salir de la función si no se encuentran los elementos
+                }
+                
+                // Paso 1: Captura los datos del cliente
+                const clientName = clientNameInput.value;
+                const clientDNI = clientDNIInput.value;
+                const clientPhone = clientPhoneInput.value;
+                const clientAuth = clientAuthInput.value;
+    
+                // Paso 2: Insertar los datos del cliente en el HTML del template
+                const clientNameElement = tempElement.querySelector("#clientName");
+                const clientDNIElement = tempElement.querySelector("#clientDNI");
+                const clientPhoneElement = tempElement.querySelector("#clientPhone");
+                const clientAuthElement = tempElement.querySelector("#clientAuth");
+
+                if (clientNameElement && clientDNIElement && clientPhoneElement && clientAuthElement) {
+                    clientNameElement.textContent = clientName;
+                    clientDNIElement.textContent = clientDNI;
+                    clientPhoneElement.textContent = clientPhone;
+                    clientAuthElement.textContent = clientAuth;
+                } else {
+                    console.error("Uno o más campos de cliente no fueron encontrados en el template.");
+                }
+    
+                // Paso 3: Insertar las reparaciones seleccionadas
+                const selectedItems = Array.from(selectedRepairs.children); // Obtener los elementos seleccionados
+                let totalSum = 0;
+                const tbodyElement = tempElement.querySelector('#selectedRepairs');
+    
+                if (tbodyElement) {
+                    selectedItems.forEach(item => {
+                        const textContent = item.textContent.trim();
+                        const [repairName, repairPrice] = textContent.split(" - $");
+    
+                        const priceValue = parseFloat(repairPrice);
+                        totalSum += priceValue;
+                        
+                        // Crear un <p> para el nombre de la reparación
+                        const repairNameElement = document.createElement('p');
+                        repairNameElement.textContent = repairName;
+                            
+                        repairNameElement.style.borderBottomStyle = 'solid';
+                        repairNameElement.style.borderBottomWidth = '2px';
+                        
+                        // Crear un <p> separado para el precio
+                        const repairPriceElement = document.createElement('p');
+                        repairPriceElement.textContent = repairPrice;
+                        
+                        repairPriceElement.style.borderLeftStyle = 'solid';
+                        repairPriceElement.style.borderLeftWidth = '2px';
+                        repairPriceElement.style.borderBottomStyle = 'solid';
+                        repairPriceElement.style.borderBottomWidth = '2px';
+
+                        tbodyElement.appendChild(repairNameElement);
+                        tbodyElement.appendChild(repairPriceElement);
+                    });
+
+                    // Paso 4: Capturar y exportar Seña y Saldo
+                    const totalSeñaElement = tempElement.querySelector('#totalSeña');
+                    const totalSaldoElement = tempElement.querySelector('#totalSaldo');
+                    const totalElement = tempElement.querySelector('#totalPrice');
+                    
+                    if (totalSeñaElement && totalElement && totalSaldoElement) {
+                        totalElement.textContent = totalSum.toFixed(2);
+                        totalSeñaElement.textContent = señaPriceInput.value;
+                        totalSaldoElement.textContent = saldoPriceElement.textContent;
+                    } else {
+                        console.error("El campo para mostrar la seña o el saldo no fue encontrado.");
+                    }
+    
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+    
+                    setTimeout(() => {
+                        doc.html(tempElement, {
+                            callback: function (doc) {
+                                doc.save("resumen-reparaciones.pdf");
+                                restoreRemoveButtons();
+                            },
+                            x: 5,
+                            y: 5,
+                            html2canvas: { scale: 0.1 },
+                            width: 100,
+                            windowWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth)
+                        });
+                    }, 1000);
+                } else {
+                    console.error("El elemento tbody para las reparaciones seleccionadas no fue encontrado.");
+                }
             })
             .catch(error => console.error('Error al cargar el archivo HTML:', error));
     });
     
-    
->>>>>>> 16eb78f ( a)
 
-            // Agrega el título del PDF
-            doc.setFontSize(18);
-            doc.text("Resumen de Reparaciones", 10, 10);
-
-            // Agrega los elementos seleccionados al PDF
-            const items = selectedRepairs.querySelectorAll("li");
-            let yOffset = 20; // Margen superior para los elementos
-            items.forEach(item => {
-                doc.setFontSize(12);
-                doc.text(item.textContent, 10, yOffset);
-                yOffset += 10; // Aumenta el margen para cada ítem
-            });
-
-            // Agrega el precio total al PDF
-            doc.setFontSize(14);
-            doc.text(`Total: $${totalPriceElement.textContent}`, 10, yOffset + 10);
-
-            // Genera y descarga el PDF
-            doc.save("resumen-reparaciones.pdf");
+    function restoreRemoveButtons() {
+        const selectedItems = document.querySelectorAll("#selectedRepairs li");
+        selectedItems.forEach(item => {
+            const removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.classList.add("btn", "btn-danger", "btn-sm", "float-end", "remove-btn");
+            removeButton.textContent = "Eliminar";
+            item.appendChild(removeButton);
         });
     }
 
-    // Evento para borrar el resumen
     clearSummaryBtn.addEventListener("click", function () {
-        selectedRepairs.innerHTML = ''; // Eliminar todos los ítems del resumen
-        totalPrice = 0; // Reiniciar el total
-        totalPriceElement.textContent = totalPrice.toFixed(2); // Actualizar el total mostrado
+        selectedRepairs.innerHTML = '';
+        totalPrice = 0;
+        totalPriceElement.textContent = totalPrice.toFixed(2);
     });
-
 });

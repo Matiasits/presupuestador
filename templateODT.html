@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orden de Trabajo</title>
+    <link rel="stylesheet" href="styleODT.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body clas="container">
+    <div class="contenedor">
+    
+        <div class="presentacion">
+            
+            <div class="presentacion-container">
+                <div class="nombre-empresa">
+                    <img src="./logo-provisorio.png" width="200px"/> 
+                    <p>Biciminuto</p> 
+                </div>
+                
+                <p>SERVICION MECÁNICO ESPECIALIZADO</p>
+                <p>REPUESTOS - ACCESORIOS - REPARACIONES</p>
+                <p>BICICLETAS NUEVAS Y DE OCACION - PERMUTAS</p>
+                <p>LAGUNILLA 2988 - B° ROSEDAL | TALMA 3222 - B° MATIENZO</p>
+                <div class="division-horizontal"></div>
+                
+                <p class="mt-3">RESPONSABLE MONOTRIBUTISTA</p>
+                
+            </div>
+            
+            <div class="division-vertical"></div>
+            
+            <div class="presentacion-container">
+                <!-- <p>numero serie</p>  -->
+                
+                <div class="info-fecha">
+                    <p>Córdoba</p>
+                    <div class="contenedorfecha-info">
+                        <p>Fecha</p>
+                        <div class="contenedor-fecha" id="contenedor-fecha" style="width: 50%; height: 60px;">
+                            <div class="casilla-fecha" id="dia-actual">
+                            </div>
+                            <div class="casilla-fecha" id="mes-actual">
+                            </div>
+                            <div class="casilla-fecha" id="año-actual">
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+                <div class="info-cuit">
+                    <p>CUIT: 27-17003788-5</p> 
+                    <p>ING. BRUTOS: 270362311</p> 
+                    <p>INICIO ACTIVIDAD: 01/04/2004</p>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="datos">
+            <div class="contenedor-datos">
+                <p class="d-flex justify-content-center align-items-center m-5">Señor/es: </p>
+                <div class="dato-dinamico">
+                    <p id="clientName"></p>
+                    <div class="renglon"></div>
+                </div>
+            </div>
+            <div class="contenedor-datos">
+                <p class="d-flex justify-content-center align-items-center m-5" >Teléfono: </p>
+                <div class="dato-dinamico">
+                    <p id="clientPhone"></p>
+                    <div class="renglon"></div>
+                </div>
+            </div>
+            <div class="contenedor-datos">
+                <p class="d-flex justify-content-center align-items-center m-5">Documento: </p> 
+                <div class="dato-dinamico">
+                    <p id="clientDNI"></p>
+                    <div class="renglon"></div>
+                </div>
+            </div>
+            <div class="contenedor-datos">
+                <p class="d-flex justify-content-center align-items-center m-5">Autorizado: </p>
+                <div class="dato-dinamico">
+                    <p id="clientAuth"></p>
+                    <div class="renglon"></div>
+                </div>
+            </div>
+            <div class="fecha">
+                <p>Fecha de ingreso</p> 
+                <p>Fecha de retiro</p> 
+                <div class="contenedor-fecha">
+                    <div style="border-radius: 25px;" class="casilla-fecha" id="dia-ingreso">
+                    </div>
+                    <div style="border-radius: 25px;" class="casilla-fecha" id="mes-ingreso">
+                    </div>
+                    <div style="border-radius: 25px;" class="casilla-fecha" id="año-ingreso">
+                    </div>
+                </div> 
+                <div class="contenedor-fecha">
+                    <div style="border-radius: 25px;" class="casilla-fecha" id="dia-retiro">
+                    </div>
+                    <div style="border-radius: 25px;" class="casilla-fecha" id="mes-retiro">
+                    </div>
+                    <div style="border-radius: 25px;" class="casilla-fecha" id="año-retiro">
+                    </div>
+                </div>
+            </div>
+            <div class="info-orden">
+                <p>ORDEN DE TRABAJO</p> 
+                <p style="color: rgb(197, 53, 53);">DOCUMENTO NO VALIDO COMO FACTURA</p>
+            </div>
+        </div>
+        
+        <div class="trabajo">
+            <div class="descripcion" id="selectedRepairs">
+                <p>Descripcion</p>
+                <p style="border-left-style: solid; border-left-width: 3px;">importe</p>
+                <div class="division-horizontal"></div>
+                <div  class="division-horizontal"></div>
+            </div>
+            <div class="d-flex justify-content-around mt-5" style="height: 200px;">
+                <div class="importante">
+                    <p>IMPORTANTE</p>
+                    <p style="color: rgb(197, 53, 53);">POR DEMORA DE RETIRAR</p>
+                    <p style="color: rgb(197, 53, 53);">EL RODADO LUEGO DE LA FECHA PACTADA</p>                    
+                    <p style="color: rgb(197, 53, 53);">SE COBRARÁ $500 PESOS DIARIOS</p>
+                </div>
+                <div style="width: 400px; gap: 20px;" class="d-flex justify-content-center align-items-center flex-column">
+                    <p>TOTAL: <span class="importe" id="totalPrice">0.00</span></p>
+                    <p>SEÑA: <span class="importe" id="totalSeña">0.00</span></p>
+                    <p>SALDO: <span class="importe" id="totalSaldo">0.00</span></p>
+                </div>
+            </div>
+        </div>
+        
+       
+    </div>
+    <script>
+        
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</body>
+</html>

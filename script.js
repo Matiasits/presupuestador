@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const exportPdfBtn = document.getElementById("exportPdfBtn");
     const señaPriceInput = document.getElementById("señaPrice");
     const saldoPriceElement = document.getElementById("saldoPrice");
+    const repairDateInput = document.getElementById('repairDate');
+
     
     // Variables de cliente
     const clientNameInput = document.getElementById('clientNameInput');
@@ -150,9 +152,52 @@ document.addEventListener("DOMContentLoaded", function () {
                 const tempElement = document.createElement('div');
                 tempElement.innerHTML = htmlContent;
     
-                const removeButtons = document.querySelectorAll(".remove-btn");
-                removeButtons.forEach(button => button.remove());
+                // Crear una instancia del objeto Date para obtener la fecha actual
+                var fechaActual = new Date();
+                var dia = fechaActual.getDate(); // Día del mes (1-31)
+                var mes = fechaActual.getMonth() + 1; // Mes (0-11, por eso sumamos 1)
+                var año = fechaActual.getFullYear(); // Año completo (e.g., 2024)
     
+                // Asegúrate de que los elementos existen antes de asignar
+                const diaElement = tempElement.querySelector('#dia-actual');
+                const mesElement = tempElement.querySelector('#mes-actual');
+                const añoElement = tempElement.querySelector('#año-actual');
+                const diaIngresoElement = tempElement.querySelector('#dia-ingreso');
+                const mesIngresoElement = tempElement.querySelector('#mes-ingreso');
+                const añoIngresoElement = tempElement.querySelector('#año-ingreso');
+                
+                if (diaElement && mesElement && añoElement) {
+                    diaElement.innerText = dia;
+                    mesElement.innerText = mes;
+                    añoElement.innerText = año;
+                    diaIngresoElement.innerText = dia;
+                    mesIngresoElement.innerText = mes;
+                    añoIngresoElement.innerText = año;
+                } else {
+                    console.error("Uno o más elementos de fecha no fueron encontrados en el template.");
+                    return; // Salir de la función si no se encuentran los elementos
+                }
+                
+                 // Captura la fecha seleccionada
+                const selectedDate = new Date(repairDateInput.value);
+                const diaRetiro = selectedDate.getDate(); // Día del mes (1-31)
+                const mesRetiro = selectedDate.getMonth() + 1; // Mes (0-11, por eso sumamos 1)
+                const añoRetiro = selectedDate.getFullYear(); // Año completo (e.g., 2024)
+    
+                // Asegúrate de que los elementos existen antes de asignar
+                const diaRetiroElement = tempElement.querySelector('#dia-retiro');
+                const mesRetiroElement = tempElement.querySelector('#mes-retiro');
+                const añoRetiroElement = tempElement.querySelector('#año-retiro');
+    
+                if (diaRetiroElement && mesRetiroElement && añoRetiroElement) {
+                    diaRetiroElement.innerText = diaRetiro;
+                    mesRetiroElement.innerText = mesRetiro;
+                    añoRetiroElement.innerText = añoRetiro;
+                } else {
+                    console.error("Uno o más elementos de fecha no fueron encontrados en el template.");
+                    return; // Salir de la función si no se encuentran los elementos
+                }
+                
                 // Paso 1: Captura los datos del cliente
                 const clientName = clientNameInput.value;
                 const clientDNI = clientDNIInput.value;
@@ -181,15 +226,30 @@ document.addEventListener("DOMContentLoaded", function () {
     
                 if (tbodyElement) {
                     selectedItems.forEach(item => {
-                        const repairRow = document.createElement('tr');
                         const textContent = item.textContent.trim();
                         const [repairName, repairPrice] = textContent.split(" - $");
     
                         const priceValue = parseFloat(repairPrice);
                         totalSum += priceValue;
-    
-                        repairRow.innerHTML = `<td>${repairName}</td><td>$${repairPrice}</td>`;
-                        tbodyElement.appendChild(repairRow);
+                        
+                        // Crear un <p> para el nombre de la reparación
+                        const repairNameElement = document.createElement('p');
+                        repairNameElement.textContent = repairName;
+                            
+                        repairNameElement.style.borderBottomStyle = 'solid';
+                        repairNameElement.style.borderBottomWidth = '2px';
+                        
+                        // Crear un <p> separado para el precio
+                        const repairPriceElement = document.createElement('p');
+                        repairPriceElement.textContent = repairPrice;
+                        
+                        repairPriceElement.style.borderLeftStyle = 'solid';
+                        repairPriceElement.style.borderLeftWidth = '2px';
+                        repairPriceElement.style.borderBottomStyle = 'solid';
+                        repairPriceElement.style.borderBottomWidth = '2px';
+
+                        tbodyElement.appendChild(repairNameElement);
+                        tbodyElement.appendChild(repairPriceElement);
                     });
 
                     // Paso 4: Capturar y exportar Seña y Saldo

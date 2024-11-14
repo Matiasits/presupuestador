@@ -37,6 +37,7 @@ body {
 .presentacion-container p {
     font-size: 25px;
     font-weight: 700;
+    word-spacing: 20px;
 }
 
 .nombre-empresa {

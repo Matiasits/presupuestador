@@ -226,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
                 if (tbodyElement) {
                     selectedItems.forEach(item => {
-                        const textContent = item.textContent.trim();
+                        const textContent = item.textContent.replace("Eliminar", "").trim();
                         const [repairName, repairPrice] = textContent.split(" - $");
     
                         const priceValue = parseFloat(repairPrice);

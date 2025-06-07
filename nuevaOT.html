@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orden de Trabajo</title>
+    <link rel="stylesheet" href="styleODT.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="logo.png">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">                
+                <div>
+                    <div id="logo-titulo">
+                        <img src="logo.png" alt="Logo Empresa">
+                        <h2>Biciminuto</h2>
+                    </div>
+                    <p>SERVICION MECÁNICO ESPECIALIZADO</p>
+                    <p>REPUESTOS - ACCESORIOS - REPARACIONES</p>
+                    <p>BICICLETAS NUEVAS Y DE OCACION - PERMUTAS</p>
+                    <p>LAGUNILLA 2988 - B° ROSEDAL  |  TALMA 3222 - B° MATIENZO</p>
+                </div>
+            </div>
+            <div class="info-general">
+                <div class="info" id="contenedor-fecha">
+                    <div>
+                        <p><strong>Localidad:</strong> Córdoba</p>
+                    </div>
+                    <div class="fechas">
+                        <div>Fecha: </div>
+                        <div  class="casilla-fecha" id="dia-actual"></div>
+                        <div  class="casilla-fecha" id="mes-actual"></div>
+                        <div  class="casilla-fecha" id="año-actual"></div>
+                    </div>
+                </div>
+                <div class="info-cuit">
+                    <p>CUIT: 27-17003788-5</p> 
+                    <p>ING. BRUTOS: 270362311</p> 
+                    <p>INICIO ACTIVIDAD: 01/04/2004</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 id="orden-trabajo" class="section-title">ORDEN DE TRABAJO</h2>
+        </div>
+
+        <!-- Datos Cliente -->
+        <div class="section">
+            <h3 class="section-title">Cliente</h3>
+            <div class="field-group">
+                <div class="field">
+                    <label for="nombre">Señor/es:</label>
+                    <p id="clientName"></p>
+                </div>
+                <div class="field">
+                    <label for="telefono">Teléfono:</label>
+                    <p id="clientPhone"></p>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <div class="field">
+                    <label for="dni">Dni:</label>
+                    <p id="clientDNI"></p>
+                </div>
+                <div class="field">
+                    <label for="autorizado">Documento:</label>
+                    <p id="clientAuth"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fechas -->
+        <div class="section">
+            <div class="field-group">
+                <div class="field">
+                    <label for="fecha-ingreso">Fecha de Ingreso:</label>
+                        <div class="fechasTrabajo">
+                        <div class="casilla-fecha" id="dia-ingreso">
+                        </div>
+                        <div class="casilla-fecha" id="mes-ingreso">
+                        </div>
+                        <div class="casilla-fecha" id="año-ingreso">
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="fecha-entrega">Fecha de Entrega:</label>
+                    <div class="fechasTrabajo">
+                        <div class="casilla-fecha" id="dia-retiro">
+                        </div>
+                        <div class="casilla-fecha" id="mes-retiro">
+                        </div>
+                        <div class="casilla-fecha" id="año-retiro">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trabajo -->
+        <div class="section">
+            <h3 class="section-title">Detalle del Trabajo</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Detalle</th>
+                        <th>Importe</th>
+                    </tr>
+                </thead>
+                <tbody id="selectedRepairs">
+                    
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Totales -->
+        <div class="totals">
+            <div class="total">TOTAL: <span id="totalPrice"></span></div>
+            <div class="total">SEÑA: <span id="totalSeña"></span></div>
+            <div class="total">SALDO: <span id="totalSaldo"></span></div>
+        </div>
+
+        <!-- Nota Importante -->
+        <div class="important">
+            <p>IMPORTANTE: Por demora en retirar el rodado se cobrará $500 diarios.</p>
+        </div>
+    </div>
+</body>
+</html>

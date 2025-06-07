@@ -145,8 +145,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
     });
+    
     exportPdfBtn.addEventListener("click", function () {
-        fetch('./templateODT.html')
+        fetch('./nuevaOT.html')
             .then(response => response.text())
             .then(htmlContent => {
                 const tempElement = document.createElement('div');
@@ -165,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const diaIngresoElement = tempElement.querySelector('#dia-ingreso');
                 const mesIngresoElement = tempElement.querySelector('#mes-ingreso');
                 const añoIngresoElement = tempElement.querySelector('#año-ingreso');
-                
+                const fechaIngreso = `${dia}/${mes}/${año}`;
                 if (diaElement && mesElement && añoElement) {
                     diaElement.innerText = dia;
                     mesElement.innerText = mes;
@@ -232,24 +233,23 @@ document.addEventListener("DOMContentLoaded", function () {
                         const priceValue = parseFloat(repairPrice);
                         totalSum += priceValue;
                         
-                        // Crear un <p> para el nombre de la reparación
-                        const repairNameElement = document.createElement('p');
+                        // Crear un <tr> para la reparación
+                        const rowElement = document.createElement('tr');
+                
+                        // Crear un <td> para el nombre de la reparación
+                        const repairNameElement = document.createElement('td');
                         repairNameElement.textContent = repairName;
-                            
-                        repairNameElement.style.borderBottomStyle = 'solid';
-                        repairNameElement.style.borderBottomWidth = '2px';
-                        
-                        // Crear un <p> separado para el precio
-                        const repairPriceElement = document.createElement('p');
+                
+                        // Crear un <td> para el precio
+                        const repairPriceElement = document.createElement('td');
                         repairPriceElement.textContent = repairPrice;
-                        
-                        repairPriceElement.style.borderLeftStyle = 'solid';
-                        repairPriceElement.style.borderLeftWidth = '2px';
-                        repairPriceElement.style.borderBottomStyle = 'solid';
-                        repairPriceElement.style.borderBottomWidth = '2px';
-
-                        tbodyElement.appendChild(repairNameElement);
-                        tbodyElement.appendChild(repairPriceElement);
+                
+                        // Agregar los <td> al <tr>
+                        rowElement.appendChild(repairNameElement);
+                        rowElement.appendChild(repairPriceElement);
+                
+                        // Agregar el <tr> al <tbody>
+                        tbodyElement.appendChild(rowElement);
                     });
 
                     // Paso 4: Capturar y exportar Seña y Saldo
@@ -264,23 +264,51 @@ document.addEventListener("DOMContentLoaded", function () {
                     } else {
                         console.error("El campo para mostrar la seña o el saldo no fue encontrado.");
                     }
-    
-                    const { jsPDF } = window.jspdf;
-                    const doc = new jsPDF();
-    
-                    setTimeout(() => {
-                        doc.html(tempElement, {
-                            callback: function (doc) {
-                                doc.save("resumen-reparaciones.pdf");
-                                restoreRemoveButtons();
-                            },
-                            x: 5,
-                            y: 5,
-                            html2canvas: { scale: 0.1 },
-                            width: 100,
-                            windowWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth)
-                        });
-                    }, 1000);
+                    
+                    // 1. Insertar en el DOM (invisible)
+                    tempElement.style.position = 'absolute';
+                    tempElement.style.left = '-9999px';
+                    document.body.appendChild(tempElement);
+                    
+                    html2canvas(tempElement, {
+                        scale: 2, // mejora la resolución
+                        useCORS: true,
+                        logging: false
+                    }).then((canvas) => {
+                        const imgData = canvas.toDataURL('image/png');
+                        const { jsPDF } = window.jspdf;
+                        const pdf = new jsPDF('p', 'mm', 'a4'); // formato A4
+                    
+                        const pageWidth = pdf.internal.pageSize.getWidth();
+                        const pageHeight = pdf.internal.pageSize.getHeight();
+                    
+                        const scale = 0.8;
+                        const imgWidth = pageWidth * scale;
+                        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                    
+                        const xOffset = (pageWidth - imgWidth) / 2; // Centrado horizontal
+                    
+                        let position = 0;
+                        if (imgHeight < pageHeight) {
+                            // Una sola página
+                            pdf.addImage(imgData, 'PNG', xOffset, position, imgWidth, imgHeight);
+                        } else {
+                          // Múltiples páginas
+                          let heightLeft = imgHeight;
+                          while (heightLeft > 0) {
+                            pdf.addImage(imgData, 'PNG', xOffset, position, imgWidth, imgHeight);
+                            heightLeft -= pageHeight;
+                            position -= pageHeight;
+                            if (heightLeft > 0) {
+                              pdf.addPage();
+                            }
+                          }
+                        }
+                        pdf.save(`${clientDNI}-${fechaIngreso}.pdf`);
+                        
+                        document.body.removeChild(tempElement);
+
+                      });
                 } else {
                     console.error("El elemento tbody para las reparaciones seleccionadas no fue encontrado.");
                 }

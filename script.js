@@ -184,7 +184,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const diaRetiro = selectedDate.getDate(); // Día del mes (1-31)
                 const mesRetiro = selectedDate.getMonth() + 1; // Mes (0-11, por eso sumamos 1)
                 const añoRetiro = selectedDate.getFullYear(); // Año completo (e.g., 2024)
-    
+                console.log(diaRetiro, mesRetiro, añoRetiro)
                 // Asegúrate de que los elementos existen antes de asignar
                 const diaRetiroElement = tempElement.querySelector('#dia-retiro');
                 const mesRetiroElement = tempElement.querySelector('#mes-retiro');

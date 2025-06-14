@@ -1,3 +1,12 @@
+window.addEventListener('load', () => {
+    const loader = document.getElementById('loader');
+    setTimeout(() => {
+        loader.classList.add('fade-out');
+        setTimeout(() => loader.style.display = 'none', 500);
+    }, 4000); 
+});
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const checkboxes = document.querySelectorAll(".repair-checkbox");
     const selectedRepairs = document.getElementById("selectedRepairs");
